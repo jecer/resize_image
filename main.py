@@ -7,6 +7,7 @@ dirs = os.listdir(path)
 out = './img/resize'
 resize = int(input('Width: '))
 
+
 def crop():
     for item in dirs:
         fullpath = os.path.join(path, item)
