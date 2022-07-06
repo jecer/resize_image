@@ -4,8 +4,8 @@ import os.path
 
 path = './img'
 dirs = os.listdir(path)
-out = './img/crop'
-
+out = './img/resize'
+resize = int(input('Width: '))
 
 def crop():
     for item in dirs:
@@ -14,7 +14,7 @@ def crop():
         if os.path.isfile(fullpath):
             img = Image.open(fullpath)
             f, e = os.path.splitext(outhome)
-            size = 600
+            size = resize
             wpercent = (size / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))
             img = img.resize((size, hsize), PIL.Image.ANTIALIAS)
