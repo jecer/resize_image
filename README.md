@@ -1,5 +1,4 @@
-# image_resize
-<h1>Resizing the image by width</h1>
+# Resizing the image by width
 <h2>Required</h2>
 pip install Pillow
 <h2>How to use</h2>
