@@ -1,36 +1,31 @@
-from pathlib import Path
+import os
 from PIL import Image
 
-path = Path('./')
-resize = int(input('Enter resize size: '))
-out_dir = path / 'resized'
-out_dir.mkdir(exist_ok=True, parents=True)
+path = './'
+out = './resize'
+resize = int(input('Size: '))
 
-ignore = ['.py', '.exe']
-for item in path.iterdir():
-    if item.is_dir():
-        images_found = False
-        for subitem in item.iterdir():
-            if subitem.is_file() and subitem.suffix not in ignore and subitem.suffix.lower() in ['.jpg', '.png']:
-                images_found = True
-                image = Image.open(subitem)
-                max_dimension = max(image.size)
-                scale = resize / max_dimension
-                new_size = (int(image.size[0] * scale), int(image.size[1] * scale))
-                image = image.resize(new_size, Image.LANCZOS)
-                if subitem.suffix == '.jpg':
-                    image.save(out_dir / item.name / (subitem.stem + '.jpg'), quality=100)
-                elif subitem.suffix == '.png':
-                    image.save(out_dir / item.name / (subitem.stem + '.png'), quality=100)
-        if not images_found:
-            (out_dir / item.name).mkdir(exist_ok=True)
-    elif item.is_file() and item.suffix not in ignore and item.suffix.lower() in ['.jpg', '.png']:
-        image = Image.open(item)
-        max_dimension = max(image.size)
-        scale = resize / max_dimension
-        new_size = (int(image.size[0] * scale), int(image.size[1] * scale))
-        image = image.resize(new_size, Image.LANCZOS)
-        if item.suffix == '.jpg':
-            image.save(out_dir / (item.stem + '.jpg'), quality=100)
-        elif item.suffix == '.png':
-            image.save(out_dir / (item.stem + '.png'), quality=100)
+def process_image(image_path, output_path):
+    img = Image.open(image_path)
+    f, e = os.path.splitext(output_path)
+    if img.size[1] > img.size[0]:
+        size = resize
+        wpercent = (size / float(img.size[1]))
+        hsize = int((float(img.size[0]) * float(wpercent)))
+        img = img.resize((hsize, size), Image.LANCZOS)
+        img.save(f + '.jpg', quality=100)
+    else:
+        size = resize
+        wpercent = (size / float(img.size[0]))
+        hsize = int((float(img.size[1]) * float(wpercent)))
+        img = img.resize((size, hsize), Image.LANCZOS)
+        img.save(f + '.jpg', quality=100)
+
+for root, dirs, files in os.walk(path):
+    for file in files:
+        fullpath = os.path.join(root, file)
+        if file.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.gif')):
+            outdir = os.path.join(out, os.path.relpath(root, path))
+            os.makedirs(outdir, exist_ok=True)
+            outfile = os.path.join(outdir, file)
+            process_image(fullpath, outfile)
