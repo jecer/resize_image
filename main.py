@@ -5,6 +5,7 @@ path = './'
 out = './resize'
 resize = int(input('Size: '))
 
+
 def process_image(image_path, output_path):
     img = Image.open(image_path)
     f, e = os.path.splitext(output_path)
@@ -20,6 +21,7 @@ def process_image(image_path, output_path):
         hsize = int((float(img.size[1]) * float(wpercent)))
         img = img.resize((size, hsize), Image.LANCZOS)
         img.save(f + '.jpg', quality=100)
+
 
 for root, dirs, files in os.walk(path):
     for file in files:
